@@ -41,7 +41,7 @@ def initialize_pythia(
     tokenizer.pad_token = tokenizer.eos_token
     tokenizer.padding_side = "left"
 
-    model = AutoModelForCausalLM.from_pretrained(model_name, attn_implementation="flash_attention_2", torch_dtype=torch.bfloat16).to(device)
+    model = AutoModelForCausalLM.from_pretrained(model_name, attn_implementation="sdpa", torch_dtype=torch.bfloat16).to(device)
 
     return tokenizer, model
 

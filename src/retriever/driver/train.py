@@ -64,7 +64,7 @@ def main():
         model_args,
         training_args,
         cache_dir=model_args.cache_dir,
-        attn_implementation="flash_attention_2"
+        attn_implementation="sdpa"
     )
 
     train_dataset = TrainDataset(data_args)
