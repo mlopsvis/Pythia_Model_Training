@@ -1,10 +1,10 @@
 torch~=2.4.1
-transformers<4.49
+transformers
 peft
 datasets
 tqdm
-pandas>=2.2.3
-numpy>=2.0.2
+pandas
+numpy
 pytest
 ruff
 pytrec_eval

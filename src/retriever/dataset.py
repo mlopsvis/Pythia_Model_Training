@@ -1,3 +1,4 @@
+import logging
 import random
 from typing import List, Tuple
 
@@ -6,7 +7,6 @@ from torch.utils.data import Dataset
 
 from retriever.arguments import DataArguments
 
-import logging
 logger = logging.getLogger(__name__)
 
 
@@ -26,10 +26,11 @@ class TrainDataset(Dataset):
             data_files=self.data_args.dataset_path,
             split=self.data_args.dataset_split,
             cache_dir=self.data_args.dataset_cache_dir,
+            revision=self.data_args.dataset_revision,
             trust_remote_code=True
         )
         if self.data_args.dataset_number_of_shards > 1:
-            self.encode_data = self.encode_data.shard(
+            self.train_data = self.train_data.shard(
                 num_shards=self.data_args.dataset_number_of_shards,
                 index=self.data_args.dataset_shard_index,
             )
@@ -78,6 +79,7 @@ class EncodeDataset(Dataset):
             data_files=self.data_args.dataset_path,
             split=self.data_args.dataset_split,
             cache_dir=self.data_args.dataset_cache_dir,
+            revision=self.data_args.dataset_revision,
             trust_remote_code=True
         )
         if self.data_args.dataset_number_of_shards > 1:

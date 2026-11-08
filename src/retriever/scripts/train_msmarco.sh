@@ -7,6 +7,7 @@ mkdir -p $trained_model_save_path
 
 trained_model_name=pythia-160m-1024-marco-docs-bow-contrastive-pretrain-marco-passage-sft
 training_data=Tevatron/msmarco-passage-aug
+training_data_revision=8ec0b7a
 
 output_dir=$trained_model_save_path/$trained_model_name
 
@@ -24,6 +25,7 @@ python -m driver.train \
   --output_dir $output_dir \
   --model_name_or_path $model_to_train \
   --dataset_name $training_data \
+  --dataset_revision $training_data_revision \
   --save_strategy steps \
   --save_steps 0.2 \
   --save_total_limit 5 \

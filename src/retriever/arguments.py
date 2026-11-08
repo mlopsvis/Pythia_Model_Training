@@ -33,6 +33,10 @@ class DataArguments:
         default=None, metadata={"help": "huggingface dataset config, useful for datasets with sub-datasets"}
     )
 
+    dataset_revision: Optional[str] = field(
+        default=None, metadata={"help": "Specific Hugging Face dataset revision or commit hash (for example, 8ec0b7a)"}
+    )
+
     dataset_path: str = field(
         default=None, metadata={"help": "Path to local data files or directory"}
     )
