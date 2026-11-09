@@ -41,6 +41,4 @@ python -m driver.train \
   --num_train_epochs 1 \
   --logging_steps 1 \
   --overwrite_output_dir \
-  --gradient_accumulation_steps 2 \
-  --report_to wandb \
-  --run_name $trained_model_name
+  --gradient_accumulation_steps 2

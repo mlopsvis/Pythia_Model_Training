@@ -64,7 +64,7 @@ def main():
         model_args.model_name_or_path,
         cache_dir=model_args.cache_dir,
         torch_dtype=torch_dtype,
-        attn_implementation="flash_attention_2"
+        attn_implementation="sdpa"
     )
 
     encode_dataset = EncodeDataset(
