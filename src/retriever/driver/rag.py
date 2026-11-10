@@ -115,7 +115,27 @@ def get_rag(query_id, doc2text, query2docs, top_n, shuffle):
     Returns:
         str: white-space separeted text of top-N documents.
     """
-    raise NotImplementedError()
+    if query2docs is None or doc2text is None:
+        return ""
+
+    doc_ids = query2docs.get(str(query_id), query2docs.get(query_id, []))
+    if not doc_ids:
+        return ""
+
+    if top_n is not None:
+        doc_ids = doc_ids[:top_n]
+
+    if shuffle:
+        doc_ids = list(doc_ids)
+        random.shuffle(doc_ids)
+
+    doc_texts = []
+    for doc_id in doc_ids:
+        text = doc2text.get(str(doc_id), doc2text.get(doc_id))
+        if text is not None:
+            doc_texts.append(str(text))
+
+    return " ".join(doc_texts)
 
 
 def apply_prompt(prefixes, trec_run, doc2text, query2docs):
@@ -180,16 +200,36 @@ def main():
         from datasets import load_dataset
 
         dataset = load_dataset('jmvcoelho/toy-corpus', split='train')
-        
+
         docid_to_text = {}
-        raise NotImplementedError()
-        #TODO: parse the huggingface dataset, and populate docid_to_text, mapping the document identifier to its repective content.
+        for row in dataset:
+            doc_id = None
+            for key in ("docid", "doc_id", "id", "document_id"):
+                if key in row:
+                    doc_id = row[key]
+                    break
+            if doc_id is None:
+                continue
+
+            text = None
+            for key in ("text", "document", "content", "body"):
+                if key in row:
+                    text = row[key]
+                    break
+            if text is not None:
+                docid_to_text[str(doc_id)] = str(text)
 
         qid_to_topdocs = {}
-
         with open(args.augmentation_run, 'r') as h:
-            raise NotImplementedError()
-            #TODO: Read the run file, and populate qid_to_topdocs, mapping query ids to a list of top-document ids.
+            for line in h:
+                line = line.strip()
+                if not line:
+                    continue
+                parts = line.split()
+                if len(parts) < 4:
+                    continue
+                qid, _, doc_id, _, _ = parts[:5]
+                qid_to_topdocs.setdefault(str(qid), []).append(str(doc_id))
 
 
     else: # this means that RAG won't be performed.
