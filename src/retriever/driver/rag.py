@@ -138,13 +138,13 @@ def get_rag(query_id, doc2text, query2docs, top_n, shuffle):
     return " ".join(doc_texts)
 
 
-def apply_prompt(prefixes, trec_run, doc2text, query2docs, top_n=10, shuffle=False):
+def apply_prompt(prefixes, trec_run, doc2text, query2docs):
 
     new_prefixes = []
 
     for prefix, query_id in prefixes:
         if trec_run is not None:
-            rag = get_rag(query_id, doc2text, query2docs, top_n=top_n, shuffle=shuffle)
+            rag = get_rag(query_id, doc2text, query2docs, top_n=1, shuffle=False)
         else:
             rag = ""
 
@@ -192,18 +192,6 @@ def main():
         default=None,
         help="trec formatted run for RAG",
     )
-    parser.add_argument(
-        "--rag_top_k",
-        type=int,
-        default=10,
-        help="number of top ranked passages to append to the prompt for RAG",
-    )
-    parser.add_argument(
-        "--rag_shuffle",
-        action="store_true",
-        help="shuffle the selected top-k passages before appending them to the prompt",
-    )
-
     args = parser.parse_args()
 
     # If necessary, load passage corpus for RAG, and get top-N document for each question.
@@ -249,14 +237,7 @@ def main():
 
     with open(args.prefixes) as f:
         prefixes = [(json.loads(line)["prefix"],  json.loads(line)["qid"])for line in f]
-        prefixes = apply_prompt(
-            prefixes,
-            args.augmentation_run,
-            docid_to_text,
-            qid_to_topdocs,
-            top_n=args.rag_top_k,
-            shuffle=args.rag_shuffle,
-        )
+        prefixes = apply_prompt(prefixes, args.augmentation_run, docid_to_text, qid_to_topdocs)
 
     max_new_tokens = args.max_new_tokens
     temperature = args.temperature

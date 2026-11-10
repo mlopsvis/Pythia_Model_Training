@@ -45,6 +45,4 @@ path_to_run=$EMBEDDING_OUTPUT_DIR/run.test.txt
 python -m driver.rag \
   --prefixes ./data/prefixes.jsonl \
   --output_dir ./data/ \
-  --augmentation_run $path_to_run \
-  --rag_top_k 10 \
-  --rag_shuffle
+  --augmentation_run $path_to_run
